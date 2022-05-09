@@ -1,3 +1,12 @@
+"""
+Function to test the Baseline model
+
+Input: car image
+
+Output: clean vs dirty
+"""
+
+
 import torch
 from PIL import Image
 from torchvision import transforms
@@ -6,6 +15,7 @@ import torch.nn.functional as F
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
+#Function to test the model
 def test_classifier(image_name="3efcdc3507.jpg"):
     
     im = Image.open(image_name)
@@ -31,6 +41,7 @@ def test_classifier(image_name="3efcdc3507.jpg"):
         y_pred_='clean'
     else:
         y_pred_='dirty'
+        
     return print(y_pred_)
     
 
