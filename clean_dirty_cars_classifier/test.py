@@ -38,7 +38,7 @@ def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
     y_pred = phat.argmax(1)
     
     y_pred = y_pred.cpu().numpy()
-    phat = np.amax(phat.detach().cpu().numpy())
+    phat = phat.detach().cpu().numpy()[0][1]
 
     if y_pred==0:
         y_pred_='clean'
