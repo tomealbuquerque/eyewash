@@ -32,7 +32,11 @@ def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
     
     X = test_transforms(im)
     
+    
     model = torch.load(model_path)
+    
+    model.eval()
+    
     phat = F.softmax(model(torch.unsqueeze(X, 0).to(device)),1)
     
     y_pred = phat.argmax(1)
