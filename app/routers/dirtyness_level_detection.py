@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from fastapi import APIRouter, status, UploadFile, File
 
 from .. import schemas
@@ -8,12 +9,8 @@ router = APIRouter(
 
 @router.post('/', status_code = status.HTTP_201_CREATED, response_model = schemas.DirtyProbability)
 async def prediction(file: UploadFile = File(...)):
-
-
-
-
-    print('Hello World')
-
-@router.get('/')
-def root():
-    return {'message': 'Galp_Hackaton_2022'}
+    # integration                        
+    extension = file.filename.split('.')[-1] in ('.jpg', 'jpeg', 'png')
+    if not extension:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, 
+                            detail = 'image must be jpg, jpeg or png format')

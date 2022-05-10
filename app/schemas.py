@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class CarDetectionResponse(BaseModel):
     bounding_box : list
 

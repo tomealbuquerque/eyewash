@@ -10,6 +10,10 @@ router = APIRouter(
 @router.post('/', status_code = status.HTTP_201_CREATED, response_model = schemas.BrandModelDetection)
 async def prediction(file: UploadFile = File(...)):
     #integration
+    if not file:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
+                            detail = 'no upload file sent')
+                        
     extension = file.filename.split('.')[-1] in ('.jpg', 'jpeg', 'png')
     if not extension:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, 
