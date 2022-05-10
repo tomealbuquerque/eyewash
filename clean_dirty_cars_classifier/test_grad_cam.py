@@ -26,9 +26,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 #Function to test the model
-def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
+def test_classifier_maps(im,model_path='baseline.pth'):
     
-    im = Image.open(image_name)
+    # im = Image.open(image_name)
     
     newsize = (224, 224)
     im = im.resize(newsize)
@@ -107,7 +107,7 @@ def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
     return {'pred_class': y_pred_, 'probability_dirty': phat, 'activation map':np.asarray(visualization)}
     
 
-predictions=test_classifier_maps()
+# predictions=test_classifier_maps()
 
 
 
