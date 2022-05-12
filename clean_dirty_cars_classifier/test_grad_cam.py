@@ -48,7 +48,7 @@ def test_classifier_maps(im,model_path):
     X = test_transforms(im)
     
     #load model
-    model = torch.load(model_path)
+    model = torch.load(model_path, map_location = torch.device('cpu'))
     model.eval()
     
     #get layers name where we want to get the activation maps
