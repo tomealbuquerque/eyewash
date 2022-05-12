@@ -17,7 +17,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 #Function to test the model
-def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
+def test_classifier(image_name="00067.jpg",model_path='baseline.pth'):
     
     im = Image.open(image_name)
     

@@ -26,7 +26,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 #Function to test the model
-def test_classifier_maps(im,model_path='baseline.pth'):
+def test_classifier_maps(im,model_path):
     
     # im = Image.open(image_name)
     
