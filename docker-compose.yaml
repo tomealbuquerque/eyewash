@@ -1,0 +1,44 @@
+version: "3.3"
+
+services:
+
+  api:
+    image: api_eyewash:latest
+
+    # If fails, then restart
+    restart: always
+
+    #Command to run when container starts
+    command: [ "uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8002" ]
+
+    working_dir: /appl/
+
+    # Map volume to a specific directory for persistence of data in mongodb
+    volumes:
+      - ./app:/appl/app
+      - ./clean_dirty_cars_classifier:/appl/clean_dirty_cars_classifier
+
+    expose:
+      - 8002
+
+    ports:
+      - "8002:8002"
+
+  dashboard:
+    image: eyewash_dashboard:latest
+
+    # If fails, then restart
+    restart: always
+
+    #Command to run when container starts
+    working_dir: /appl/dashboard/
+    command: "streamlit run dashboard.py --server.port 8504"
+
+    volumes:
+      - ./dashboard:/appl/dashboard
+
+    expose:
+      - 8504
+
+    ports:
+      - "8504:8504"
