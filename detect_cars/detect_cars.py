@@ -3,11 +3,12 @@ import cv2
 import matplotlib.pyplot as plt
 import cvlib as cv
 from cvlib.object_detection import draw_bbox
+import numpy as np
 
 
-def detect_objects(path_to_image:str):
+def detect_objects(im: np.array):
   # Read image
-  im = cv2.imread(path_to_image)
+  # im = cv2.imread(path_to_image)
   # Perform detection and get results
   bbox, label, conf = cv.detect_common_objects(im, model = "yolov4", confidence=0.5)
   # Draw bounding boxes over detected objects
@@ -40,11 +41,19 @@ def crop_image_bbox(image,bbox:list):
   crop_image = image[xmin:xmax,ymin:ymax]
   return crop_image_bbox
 
+def bounding_box_detection(im: np.array):
+  #Detect objects
+  res = detect_objects(im)
+
+  #Filter by cars
+  boxes_cars = filter_cars_detected(res)
+  
+  return boxes_cars
 
 if __name__ == "__main__":
-    path_img = 'dset_img_2.jpg'
-
-    im = cv2.imread(path_img)
+  bounding_box_detection()
+  """
+  im = cv2.imread(path_img)
 
     #Detect objects
     res = detect_objects(path_img)
@@ -63,6 +72,8 @@ if __name__ == "__main__":
       a = calculate_area_bbox(b)
       print("Area ", a)
       areas.append(a)
+
+"""
 
 
 

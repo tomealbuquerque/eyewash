@@ -24,6 +24,7 @@ async def prediction(file: UploadFile = File(...)):
     if not extension:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, 
                           detail = 'image must be jpg, jpeg or png format')
+                          
     im = read_imagefile(await file.read())
 
     output = test_classifier_maps(im, model_path = 'clean_dirty_cars_classifier/baseline.pth')
