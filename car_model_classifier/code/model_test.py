@@ -1,0 +1,99 @@
+# Imports
+import os
+import argparse
+import _pickle as pickle
+import numpy as np
+from tqdm import tqdm
+import datetime
+from torchinfo import summary
+
+# Sklearn Imports
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.utils.class_weight import compute_class_weight
+
+# PyTorch Imports
+import torch
+from torch.utils.data import DataLoader
+import torchvision
+from torch.utils.tensorboard import SummaryWriter
+
+
+# Fix Random Seeds
+random_seed = 42
+torch.manual_seed(random_seed)
+np.random.seed(random_seed)
+
+
+# Project Imports
+from model_utilities import VGG16, DenseNet121, ResNet50
+from data_utilities import StanfordCarsDataset
+
+
+
+# Function: Predict Model
+def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoint=None, device='cpu'):
+
+    # VGG-16
+    if MODEL.lower() == "VGG16".lower():
+        model = VGG16(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
+
+    # DenseNet-121
+    elif MODEL.lower() == "DenseNet121".lower():
+        model = DenseNet121(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
+
+    # ResNet50
+    elif MODEL.lower() == "ResNet50".lower():
+        model = ResNet50(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
+    
+    # Move model to device
+    model = model.to(device)
+
+    # Load model weights
+    if model_checkpoint:    
+        model_file = os.path.join(weights_dir, f"{model_name}_{dataset.lower()}_best.pt")
+        checkpoint = torch.load(model_file, map_location=device)
+        model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+
+    # Put model in evaluation mode
+    model.eval()
+
+
+    # Mean and STD to Normalize the inputs into pretrained models
+    MEAN = [0.485, 0.456, 0.406]
+    STD = [0.229, 0.224, 0.225]
+
+    # Transforms
+    transforms = torchvision.transforms.Compose([
+        torchvision.transforms.Resize((224, 224)),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize(mean=MEAN, std=STD)
+    ])
+
+
+    with torch.no_grad():
+        # Load data
+        pil_image = Image.open(image).convert("RGB")
+        pil_image = transforms(pil_image)
+        pil_image.to(device)
+
+        # Get logits
+        logits = model(pil_image)
+
+        # Apply Softmax to Logits
+        s_logits = torch.nn.Softmax(dim=1)(logits)                        
+        s_logits = torch.argmax(s_logits, dim=1)
+        
+        # Get prediction
+        prediction = s_logits[0].item()
+
+        # Map prediction into class name
+        with open('idx_to_class_name.pickle', 'rb') as f:
+            idx_to_class_name = pickle.load(f)
+        
+        
+        # Get predicted class
+        predicted_class = idx_to_class_name[int(prediction)]
+
+
+    return predicted_class
