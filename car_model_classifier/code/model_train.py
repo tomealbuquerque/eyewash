@@ -60,9 +60,6 @@ GPU_ID = 0
 
 
 
-
-
-
 # Timestamp (to save results)
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 outdir = os.path.join(RESULTS_DIR, "stanfordcars", MODEL.lower(), timestamp)
@@ -102,7 +99,7 @@ val_set = StanfordCarsDataset(base_data_path=DATA_DIR, data_split="test", resize
 
 # Get number of classes
 nr_classes = len(train_set.class_names)
-
+# print(nr_classes)
 
 
 # Results and Weights
