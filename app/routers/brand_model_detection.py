@@ -1,23 +1,28 @@
+import sys
 from fastapi import APIRouter, status, HTTPException, UploadFile, File
 
 from .. import schemas
+from car_model_classifier.code.model_test import predict_car_model
+from ..utils.read_image import read_imagefile
+
 
 router = APIRouter(
     prefix = '/brand_model_detection',
     tags = ['Brand Model Detection']
 )
 
-@router.post('/', status_code = status.HTTP_201_CREATED, response_model = schemas.BrandModelDetection)
+sys.path.append('car_model_classifier')
+
+@router.post('/', status_code = status.HTTP_201_CREATED)
 async def prediction(file: UploadFile = File(...)):
-    #integration
-    if not file:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
-                            detail = 'no upload file sent')
-                        
+    #integration        
     extension = file.filename.split('.')[-1] in ('jpg', 'jpeg', 'png')
+
     if not extension:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, 
                             detail = 'Image must be jpg, jpeg or png format')
+
+    im = read_imagefile(await file.read())
+    prediction_model = predict_car_model(im)
     
-    prediction_brands = {'Here comes the output'}
-    return prediction_brands
+    return prediction_model
