@@ -6,6 +6,7 @@ import numpy as np
 from tqdm import tqdm
 import datetime
 from torchinfo import summary
+from PIL import Image
 
 # Sklearn Imports
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
@@ -31,18 +32,18 @@ from car_model_classifier.code.model_utilities import VGG16, DenseNet121, ResNet
 
 
 # Function: Predict Model
-def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoint=None, device='cpu'):
+def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, backbone="ResNet50", nr_classes=196, model_checkpoint=None, device='cpu'):
 
     # VGG-16
-    if MODEL.lower() == "VGG16".lower():
+    if backbone.lower() == "VGG16".lower():
         model = VGG16(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
 
     # DenseNet-121
-    elif MODEL.lower() == "DenseNet121".lower():
+    elif backbone.lower() == "DenseNet121".lower():
         model = DenseNet121(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
 
     # ResNet50
-    elif MODEL.lower() == "ResNet50".lower():
+    elif backbone.lower() == "ResNet50".lower():
         model = ResNet50(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
     
     # Move model to device
@@ -50,7 +51,7 @@ def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoi
 
     # Load model weights
     if model_checkpoint:    
-        model_file = os.path.join(weights_dir, f"{model_name}_{dataset.lower()}_best.pt")
+        model_file = os.path.join("results", f"{model_name}_{dataset.lower()}_best.pt")
         checkpoint = torch.load(model_file, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'], strict=True)
 
