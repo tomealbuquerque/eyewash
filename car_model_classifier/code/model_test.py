@@ -1,24 +1,12 @@
 # Imports
 import os
-import argparse
 import _pickle as pickle
 import numpy as np
-from tqdm import tqdm
-import datetime
-from torchinfo import summary
 from PIL import Image
-
-# Sklearn Imports
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
-from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
 
 # PyTorch Imports
 import torch
-from torch.utils.data import DataLoader
 import torchvision
-from torch.utils.tensorboard import SummaryWriter
-
 
 # Fix Random Seeds
 random_seed = 42
@@ -51,7 +39,7 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
 
     # Load model weights
     if model_checkpoint:    
-        model_file = os.path.join("results", f"{model_name}_{dataset.lower()}_best.pt")
+        model_file = os.path.join("results", f"{backbone.lower()}_stanfordcars_best.pt")
         checkpoint = torch.load(model_file, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'], strict=True)
 
