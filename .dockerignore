@@ -1,2 +1,6 @@
-clean_dirty_cars_classifier/baseline.pth
-database
+./clean_dirty_cars_classifier/baseline.pth
+./mongodb/database/data/**
+
+mongodb
+
+*.pth

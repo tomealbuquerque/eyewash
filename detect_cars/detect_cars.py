@@ -40,7 +40,8 @@ def calculate_area_bbox(bbox:list):
 def crop_image_bbox(image, bbox: list):
   xmin,ymin,xmax,ymax = bbox
   crop_image = image[xmin:xmax,ymin:ymax]
-  return crop_image_bbox
+
+  return crop_image
 
 def bounding_box_detection(im: np.array):
   #Detect objects
