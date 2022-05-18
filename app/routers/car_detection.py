@@ -25,5 +25,5 @@ async def detection(file: UploadFile = File(...)):
     im = read_imagefile(await file.read())
 
     bounding_box = bounding_box_detection(im)
-    
+
     return bounding_box

@@ -9,8 +9,9 @@ import numpy as np
 def detect_objects(im: np.array):
   # Read image
   # im = cv2.imread(path_to_image)
+
   # Perform detection and get results
-  bbox, label, conf = cv.detect_common_objects(im, model = "yolov4", confidence=0.5)
+  bbox, label, conf = cv.detect_common_objects(im, model = "yolov4", confidence=0.3)
   # Draw bounding boxes over detected objects
   output_image = draw_bbox(im, bbox, label, conf)
 
@@ -36,7 +37,7 @@ def calculate_area_bbox(bbox:list):
   area = (xmax - xmin) * (ymax - ymin)
   return area
 
-def crop_image_bbox(image,bbox:list):
+def crop_image_bbox(image, bbox: list):
   xmin,ymin,xmax,ymax = bbox
   crop_image = image[xmin:xmax,ymin:ymax]
   return crop_image_bbox
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     #Filter by cars
     boxes_cars = filter_cars_detected(res)
 
-    cropped = crop_image_bbox(im,boxes_cars[0])
+    cropped = crop_image_bbox(im, boxes_cars[0])
     
 
     print(boxes_cars)
