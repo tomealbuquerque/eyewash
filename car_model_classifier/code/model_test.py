@@ -20,7 +20,7 @@ from car_model_classifier.code.model_utilities import VGG16, DenseNet121, ResNet
 
 
 # Function: Predict Model
-def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, backbone="ResNet50", nr_classes=196, model_checkpoint=None, device='cpu'):
+def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, backbone="ResNet50", nr_classes=196, model_checkpoint=True, device='cpu'):
 
     # VGG-16
     if backbone.lower() == "VGG16".lower():
