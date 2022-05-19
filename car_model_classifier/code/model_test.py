@@ -15,7 +15,7 @@ np.random.seed(random_seed)
 
 
 # Project Imports
-from car_model_classifier.code.model_utilities import VGG16, DenseNet121, ResNet50
+from model_utilities import VGG16, DenseNet121, ResNet50
 
 
 
