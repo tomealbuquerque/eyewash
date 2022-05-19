@@ -1,16 +1,6 @@
-from fastapi import APIRouter
-from fastapi.encoders import jsonable_encoder
-
-
-
-from .. import models, database
-
-router = APIRouter(
-    prefix = '/decision_process',
-    tags = ['Decision Process']
-)
-
+from datetime import datetime
 from fastapi import APIRouter, UploadFile, HTTPException, status, File
+from fastapi.encoders import jsonable_encoder
 
 from detect_cars.detect_cars import filter_cars_detected, detect_objects
 from car_model_classifier.code.model_test import predict_car_model
@@ -21,17 +11,23 @@ from PIL import Image
 
 from ..utils.read_image import read_imagefile
 
+from .. import models, database
+
+router = APIRouter(
+    prefix = '/decision_process',
+    tags = ['Decision Process']
+)
+
 sys.path.append('car_model_classifier')
 sys.path.append('clean_dirty_cars_classifier')
 sys.path.append('detect_cars')
-
 
 @router.get('/')
 def root():
 
     return {'message': 'Galp_Hackaton_2022'}
 
-@router.post('/', status_code = status.HTTP_201_CREATED)
+@router.post('/decision_process', status_code = status.HTTP_201_CREATED)
 async def decision_process(file: UploadFile = File(...)):
 
     im = read_imagefile(await file.read())
@@ -66,7 +62,12 @@ async def decision_process(file: UploadFile = File(...)):
         outcome.update(dirty_level)
         outcome.update(car_model)
         outcomes.append(outcome)
+    
+        outcome['timestamp'] = datetime.datetime.now()
 
+        # save on the DB
+        new_car = await database.db['cars'].insert_one(outcome)
+        posted_car = await database.db['cars'].find_one(outcome)
         outcome = {}
 
     return outcomes
