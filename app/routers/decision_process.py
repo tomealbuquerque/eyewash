@@ -27,7 +27,7 @@ def root():
 
     return {'message': 'Galp_Hackaton_2022'}
 
-@router.post('/decision_process', status_code = status.HTTP_201_CREATED)
+@router.post('/', status_code = status.HTTP_201_CREATED)
 async def decision_process(file: UploadFile = File(...)):
 
     im = read_imagefile(await file.read())
@@ -63,11 +63,13 @@ async def decision_process(file: UploadFile = File(...)):
         outcome.update(car_model)
         outcomes.append(outcome)
     
-        outcome['timestamp'] = datetime.datetime.now()
+        outcome['timestamp'] = datetime.now()
 
         # save on the DB
-        new_car = await database.db['cars'].insert_one(outcome)
-        posted_car = await database.db['cars'].find_one(outcome)
+        database.db['cars'].insert_one(outcome)
+
+        outcome.pop('_id')
+
         outcome = {}
 
     return outcomes

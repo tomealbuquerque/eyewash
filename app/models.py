@@ -1,3 +1,5 @@
+"""
+
 # import modules
 from bson import ObjectId
 from sqlalchemy import TIMESTAMP
@@ -28,3 +30,4 @@ class Car(BaseModel):
     model: str = Field(...)
     dirtyness_level: str = Field(...)
     decision: str = Field(...)
+"""

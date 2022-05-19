@@ -1,7 +1,7 @@
 # import modules
 from pymongo import MongoClient
 
-CONNECTIONSTRING = 'mongodb://admin:{MONGODB_ADMIN}@mongodb:27017'
+CONNECTIONSTRING = 'mongodb://admin:admin@mongodb:27017'
 
 # connect the Mongo Client
 client = MongoClient(CONNECTIONSTRING)
