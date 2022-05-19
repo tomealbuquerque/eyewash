@@ -32,7 +32,7 @@ from data_utilities import StanfordCarsDataset
 
 # Add the arguments
 # Data directory
-DATA_DIR = "data"
+DATA_DIR = r"D:\data\data"
 
 # Model
 MODEL = "ResNet50"
@@ -53,7 +53,7 @@ LEARNING_RATE = 1e-3
 RESULTS_DIR = "results"
 
 # Number of workers
-NUM_WORKERS = 4
+NUM_WORKERS = 0
 
 # GPU ID
 GPU_ID = 0
@@ -158,7 +158,7 @@ except:
 
 
 # Write into file
-with open(os.path.join(outdir, "model_summary.txt"), 'w') as f:
+with open(os.path.join(outdir, "model_summary.txt"), 'w', encoding="utf-8") as f:
     f.write(str(model_summary))
 
 
@@ -257,7 +257,7 @@ for epoch in range(0, EPOCHS):
     train_recall = recall_score(y_true=y_train_true, y_pred=y_train_pred, average='micro')
     train_precision = precision_score(y_true=y_train_true, y_pred=y_train_pred, average='micro')
     train_f1 = f1_score(y_true=y_train_true, y_pred=y_train_pred, average='micro')
-    train_auc = roc_auc_score(y_true=y_train_true, y_score=y_train_scores[:, 1], average='micro')
+    # train_auc = roc_auc_score(y_true=y_train_true, y_score=y_train_scores[:, 1], average='none', multi_class="ovr")
 
     # Print Statistics
     print(f"Train Loss: {avg_train_loss}\tTrain Accuracy: {train_acc}")
@@ -282,7 +282,7 @@ for epoch in range(0, EPOCHS):
     # F1-Score
     train_metrics[epoch, 3] = train_f1
     # ROC AUC
-    train_metrics[epoch, 4] = train_auc
+    # train_metrics[epoch, 4] = train_auc
 
     # Save it to directory
     fname = os.path.join(history_dir, f"{MODEL.lower()}_tr_metrics.npy")
@@ -294,7 +294,7 @@ for epoch in range(0, EPOCHS):
     tbwritter.add_scalar("rec/train", train_recall, global_step=epoch)
     tbwritter.add_scalar("prec/train", train_precision, global_step=epoch)
     tbwritter.add_scalar("f1/train", train_f1, global_step=epoch)
-    tbwritter.add_scalar("auc/train", train_auc, global_step=epoch)
+    # tbwritter.add_scalar("auc/train", train_auc, global_step=epoch)
 
     # Update Variables
     # Min Training Loss
@@ -358,7 +358,7 @@ for epoch in range(0, EPOCHS):
         val_recall = recall_score(y_true=y_val_true, y_pred=y_val_pred, average='micro')
         val_precision = precision_score(y_true=y_val_true, y_pred=y_val_pred, average='micro')
         val_f1 = f1_score(y_true=y_val_true, y_pred=y_val_pred, average='micro')
-        val_auc = roc_auc_score(y_true=y_val_true, y_score=y_val_scores[:, 1], average='micro')
+        # val_auc = roc_auc_score(y_true=y_val_true, y_score=y_val_scores[:, 1], average='micro')
 
         # Print Statistics
         print(f"Validation Loss: {avg_val_loss}\tValidation Accuracy: {val_acc}")
@@ -382,7 +382,7 @@ for epoch in range(0, EPOCHS):
         # F1-Score
         val_metrics[epoch, 3] = val_f1
         # ROC AUC
-        val_metrics[epoch, 4] = val_auc
+        # val_metrics[epoch, 4] = val_auc
 
         # Save it to directory
         fname = os.path.join(history_dir, f"{MODEL.lower()}_val_metrics.npy")
@@ -394,7 +394,7 @@ for epoch in range(0, EPOCHS):
         tbwritter.add_scalar("rec/val", val_recall, global_step=epoch)
         tbwritter.add_scalar("prec/val", val_precision, global_step=epoch)
         tbwritter.add_scalar("f1/val", val_f1, global_step=epoch)
-        tbwritter.add_scalar("auc/val", val_auc, global_step=epoch)
+        # tbwritter.add_scalar("auc/val", val_auc, global_step=epoch)
 
         # Update Variables
         # Min validation loss and save if validation loss decreases
