@@ -15,7 +15,7 @@ np.random.seed(random_seed)
 
 
 # Project Imports
-from model_utilities import VGG16, DenseNet121, ResNet50
+from .model_utilities import VGG16, DenseNet121, ResNet50
 
 
 
@@ -39,7 +39,7 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
 
     # Load model weights
     if model_checkpoint:    
-        model_file = os.path.join("results", f"{backbone.lower()}_stanfordcars_best.pt")
+        model_file = os.path.join("car_model_classifier", "results", f"{backbone.lower()}_stanfordcars_best.pt")
         checkpoint = torch.load(model_file, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'], strict=True)
 
@@ -62,21 +62,31 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
     with torch.no_grad():
         # Load data
         # pil_image = Image.open(image).convert("RGB")
-        pil_image = transforms(image)
+
+        if isinstance(image, np.ndarray):
+            image = Image.fromarray(image).convert("RGB")
+
+        pil_image = transforms(image)[None, :]
         pil_image.to(device)
 
         # Get logits
         logits = model(pil_image)
 
         # Apply Softmax to Logits
-        s_logits = torch.nn.Softmax(dim=1)(logits)                        
+        s_logits = torch.nn.Softmax(dim=1)(logits)
+
+        print(s_logits.shape)
+
+        prob = s_logits[0][torch.argmax(s_logits, dim=1)]
+
         s_logits = torch.argmax(s_logits, dim=1)
         
         # Get prediction
         prediction = s_logits[0].item()
+        
 
         # Map prediction into class name
-        with open('idx_to_class_name.pickle', 'rb') as f:
+        with open(os.path.join("car_model_classifier", "code", "idx_to_class_name.pickle"), 'rb') as f:
             idx_to_class_name = pickle.load(f)
         
         
@@ -84,4 +94,4 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
         predicted_class = idx_to_class_name[int(prediction)]
 
 
-    return predicted_class
+    return {'predicted_class': predicted_class, 'probability': prob[0].item()}

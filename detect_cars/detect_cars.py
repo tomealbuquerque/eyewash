@@ -11,7 +11,7 @@ def detect_objects(im: np.array):
   # im = cv2.imread(path_to_image)
   # Perform detection and get results
   #model = "yolov4"
-  bbox, label, conf = cv.detect_common_objects(im ,model = "yolov4", confidence=0.4)
+  bbox, label, conf = cv.detect_common_objects(im, model = "yolov3", confidence=0.4)
   # Draw bounding boxes over detected objects
   output_image = draw_bbox(im, bbox, label, conf)
 
