@@ -2,35 +2,58 @@ import streamlit as st
 from PIL import Image
 import requests
 from requests.exceptions import HTTPError
+from matplotlib import pyplot as plt
 
 
 def load_image(image_file):
     img = Image.open(image_file)
     return img
 
-BASE_URL = 'http://localhost:8081?'
+BASE_URL = 'http://api:8002/'
 
-def make_request(type:str, endpoint :str):
-
+def make_request(endpoint :str, img_path:str):
+    
     url = BASE_URL + endpoint
 
-    try:
-        if type == 'GET':
-            response = requests.get(url)
-        elif type == 'POST'
-            response = requests.post(url)
+    headers = {
+    'accept': 'application/json',
+    # requests won't add a boundary if this header is set when you pass files=
+    'Content-Type': 'multipart/form-data',
+    }
 
+    #files = {'file': open(f'{img_path}', 'rb'),}
+    #response = requests.post(BASE_URL + endpoint , headers=headers, files=files)
+    print("IMAGE PATH ", img_path)
+    headers = {
+    'accept': 'application/json',
+    'Content-Type': 'multipart/form-data',
+    }
+
+    files = {
+    'file': ('uploaded.png;type', open('uploaded.png;type', 'rb')),
+    }
+
+    response = requests.post('http://localhost:8002/car_detection/', headers=headers, files=files)
+    """
+    with open(img_path + ';type:image/png', 'rb') as f:
+        response = requests.post(url, headers=headers, files={'file': f})
+        print('Success!')
+        print('GOT FROM API: ', response)
+        return response
+        #response = requests.post(url)
         # If the response was successful, no Exception will be raised
-        response.raise_for_status()
+        #response.raise_for_status()
+    """
+    """
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')  
     except Exception as err:
         print(f'Other error occurred: {err}')
-    else:
-        print('Success!')
-        print('GOT FROM API: ', response.content)
-
-    return response.content
+    """
+    return None
+        
+    
+    
 
 
 
@@ -84,10 +107,14 @@ elif mechanism == "Dirtyness Detection":
 
     if image_file:
         image = load_image(image_file)
+        plt.imsave('uploaded.png' , image)
         st.image(image)
 
         st.write("Prediction xyz")
+
+        res = make_request('car_detection','uploaded.png')
     
+        st.write(res)
         # Call API for dirtyness detection and bounding box detection.
         # Draw image with bounding box
         # requests.post('http://api:8080?get_bounding_box'...)

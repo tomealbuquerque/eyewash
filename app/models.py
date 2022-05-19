@@ -1,10 +1,11 @@
+"""
 # import modules
 from bson import ObjectId
 from sqlalchemy import TIMESTAMP
 from pydantic import Field
 
 from pydantic import BaseModel
-from sqlalchemy import TIMESTAMP
+#from sqlalchemy import TIMESTAMP
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -28,3 +29,4 @@ class Car(BaseModel):
     model: str = Field(...)
     dirtyness_level: str = Field(...)
     decision: str = Field(...)
+"""

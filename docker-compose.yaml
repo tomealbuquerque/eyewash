@@ -34,7 +34,7 @@ services:
 
     #Command to run when container starts
     working_dir: /appl/dashboard/
-    command: "streamlit run dashboard.py --server.port 8504"
+    command: "streamlit run main.py --server.port 8504"
 
     volumes:
       - ./dashboard:/appl/dashboard
