@@ -61,7 +61,7 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
 
     with torch.no_grad():
         # Load data
-        pil_image = Image.open(image).convert("RGB")
+        # pil_image = Image.open(image).convert("RGB")
         pil_image = transforms(pil_image)
         pil_image.to(device)
 
