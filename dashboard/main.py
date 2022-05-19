@@ -1,11 +1,38 @@
 import streamlit as st
 from PIL import Image
 import requests
+from requests.exceptions import HTTPError
 
 
 def load_image(image_file):
     img = Image.open(image_file)
     return img
+
+BASE_URL = 'http://localhost:8081?'
+
+def make_request(type:str, endpoint :str):
+
+    url = BASE_URL + endpoint
+
+    try:
+        if type == 'GET':
+            response = requests.get(url)
+        elif type == 'POST'
+            response = requests.post(url)
+
+        # If the response was successful, no Exception will be raised
+        response.raise_for_status()
+    except HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')  
+    except Exception as err:
+        print(f'Other error occurred: {err}')
+    else:
+        print('Success!')
+        print('GOT FROM API: ', response.content)
+
+    return response.content
+
+
 
 
 LOGO = load_image('assets/logo.png')
