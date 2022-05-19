@@ -13,13 +13,14 @@ from torchvision import transforms
 import torch.nn.functional as F
 import numpy as np
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 
 
 #Function to test the model
-def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
+def test_classifier(im, model_path='baseline.pth'):
     
-    im = Image.open(image_name)
+    # im = Image.open(image_name)
     
     newsize = (224, 224)
     im = im.resize(newsize)
@@ -31,11 +32,10 @@ def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
     ])
     
     X = test_transforms(im)
+
+    model = torch.load(model_path, map_location=torch.device('cpu'))
     
-    
-    model = torch.load(model_path)
-    
-    model.eval()
+    # model.eval()
     
     phat = F.softmax(model(torch.unsqueeze(X, 0).to(device)),1)
     
@@ -48,8 +48,11 @@ def test_classifier(image_name="3efcdc3507.jpg",model_path='baseline.pth'):
         y_pred_='clean'
     else:
         y_pred_='dirty'
+
+    
+    print({'pred_class': y_pred_, 'probability_dirty': phat})
         
-    return {'pred_class': y_pred_, 'probability_dirty': phat}
+    return {'pred_class': y_pred_, 'probability_dirty': float(phat)}
     
 
-predictions=test_classifier()
+# predictions=test_classifier()

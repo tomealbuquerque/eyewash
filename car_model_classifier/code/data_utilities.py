@@ -80,7 +80,8 @@ class StanfordCarsDataset(Dataset):
         # Note: Original target mapping  starts from 1, hence -1
         self.samples = [(os.path.join(self.subset_images, annotation["fname"]), annotation["class"] - 1) for annotation in loadmat(self.annotations_mat_path, squeeze_me=True)["annotations"]]
         self.class_names = loadmat(os.path.join(self.base_labels_path, "devkit", "cars_meta.mat"), squeeze_me=True)["class_names"].tolist()
-        self.class_name_to_idx = {cls: i for i, cls in enumerate(self.class_names)}        
+        self.class_name_to_idx = {cls: i for i, cls in enumerate(self.class_names)}
+        self.idx_to_class_name = {i: cls for i, cls in enumerate(self.class_names)}
 
         # Transform
         self.transform = transform
