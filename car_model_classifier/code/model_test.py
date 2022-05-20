@@ -22,6 +22,8 @@ from .model_utilities import VGG16, DenseNet121, ResNet50
 # Function: Predict Model
 def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, backbone="ResNet50", nr_classes=196, model_checkpoint=True, device='cpu'):
 
+    image = image.copy()
+
     # VGG-16
     if backbone.lower() == "VGG16".lower():
         model = VGG16(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
@@ -94,4 +96,4 @@ def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, b
         predicted_class = idx_to_class_name[int(prediction)]
 
 
-    return {'predicted_class': predicted_class, 'probability': prob[0].item()}
+    return {'predicted_class_ymm': predicted_class, 'probability_ymm': np.round(prob[0].item(), 3)}

@@ -19,11 +19,17 @@ device = torch.device('cpu')
 
 #Function to test the model
 def test_classifier(im, model_path='baseline.pth'):
-    
+
     # im = Image.open(image_name)
-    
+
+    im = im.copy()
+
+    if isinstance(im, np.ndarray):
+        im = Image.fromarray(im).convert('RGB')
+
     newsize = (224, 224)
     im = im.resize(newsize)
+    #im = np.resize(im, newsize)
     
     test_transforms = transforms.Compose([
         

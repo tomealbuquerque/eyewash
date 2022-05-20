@@ -19,6 +19,7 @@ services:
       - ./clean_dirty_cars_classifier:/appl/clean_dirty_cars_classifier
       - ./detect_cars:/appl/detect_cars
       - ./car_model_classifier:/appl/car_model_classifier
+      - ./shared:/appl/shared
 
     expose:
       - 8002
@@ -38,6 +39,7 @@ services:
 
     volumes:
       - ./dashboard:/appl/dashboard
+      - ./shared:/appl/shared
 
     expose:
       - 8504

@@ -14,7 +14,7 @@ from fastapi import APIRouter, UploadFile, HTTPException, status, File
 
 from detect_cars.detect_cars import filter_cars_detected, detect_objects
 from car_model_classifier.code.model_test import predict_car_model
-from clean_dirty_cars_classifier.test import test_classifier
+from clean_dirty_cars_classifier.test_grad_cam import test_classifier_maps
 
 import sys
 from PIL import Image
@@ -28,7 +28,6 @@ sys.path.append('detect_cars')
 
 @router.get('/')
 def root():
-
     return {'message': 'Galp_Hackaton_2022'}
 
 @router.post('/', status_code = status.HTTP_201_CREATED)
@@ -43,7 +42,7 @@ async def decision_process(file: UploadFile = File(...)):
     boxes_car = filter_cars_detected((bbox, label, conf))
 
     # Create a list for detect cars
-    cropped_cars=[]
+    cropped_cars = []
 
     outcomes = []
 
@@ -58,13 +57,15 @@ async def decision_process(file: UploadFile = File(...)):
         image_cars = image_full.crop(bc)
 
         # Compute the dirtyness
-        dirty_level = test_classifier(image_cars, model_path='clean_dirty_cars_classifier/baseline.pth')
+        dirty_level = test_classifier_maps(image_cars, model_path='clean_dirty_cars_classifier/baseline.pth')
 
         # Compute the Brand and Model of the Model
         car_model = predict_car_model(image_cars)
 
         outcome.update(dirty_level)
         outcome.update(car_model)
+        outcome.update({'bbox': bc})
+
         outcomes.append(outcome)
 
         outcome = {}
