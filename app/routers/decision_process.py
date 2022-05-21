@@ -24,7 +24,6 @@ sys.path.append('detect_cars')
 
 @router.get('/')
 def root():
-
     return {'message': 'Galp_Hackaton_2022'}
 
 @router.post('/', status_code = status.HTTP_201_CREATED)
