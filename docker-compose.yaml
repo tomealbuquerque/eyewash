@@ -27,6 +27,31 @@ services:
     ports:
       - "8002:8002"
 
+  # Define the mongodb service container
+  mongodb:
+    # Build from mongo image
+    image: mongo:4.0.11
+
+    command: --smallfiles --auth --logappend --logpath 'data/db/logs/mongodb_logs.log'
+    restart: always
+  
+    # Pass environment variables to the mongodb container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGODB_DATABASE: admin
+
+    deploy:
+      placement:
+        constraints: [ node.role == manager ]
+
+    # Exports ports to host machine
+    ports:
+      - "27017:27017"
+    # Map volume to a specific directory for persistence of data in mongodb
+    volumes:
+      - ./mongodb/database/data:/data/db
+
   dashboard:
     image: eyewash_dashboard:latest
 
