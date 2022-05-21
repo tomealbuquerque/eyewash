@@ -8,27 +8,26 @@ Output: clean vs dirty class | probability of dirty | heatmap where the model fo
 """
 
 #imports
-from pytorch_grad_cam import GradCAM, ScoreCAM, GradCAMPlusPlus, AblationCAM, XGradCAM, EigenCAM, FullGrad
+from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from pytorch_grad_cam.utils.image import show_cam_on_image
 
 import torch
 from torchvision import transforms
 import torch.nn.functional as F
+import json
 
 import numpy as np
 from PIL import Image
-from matplotlib.pyplot import imshow
-import matplotlib.pyplot as plt
+# from matplotlib.pyplot import imshow
+# import matplotlib.pyplot as plt
 
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+device = torch.device('cpu')
 
 #Function to test the model
-def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
+def test_classifier_maps(im, model_path):
     
-    im = Image.open(image_name)
+    # im = Image.open(image_name)
     
     newsize = (224, 224)
     im = im.resize(newsize)
@@ -48,7 +47,7 @@ def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
     X = test_transforms(im)
     
     #load model
-    model = torch.load(model_path)
+    model = torch.load(model_path, map_location = torch.device('cpu'))
     model.eval()
     
     #get layers name where we want to get the activation maps
@@ -64,7 +63,7 @@ def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
     input_tensor = torch.unsqueeze(X, 0).to(device)  # Create an input tensor image for your model..
 
     # Construct the CAM object once, and then re-use it on many images:
-    cam = GradCAM(model=model, target_layers=target_layers, use_cuda=device)
+    cam = GradCAM(model=model, target_layers=target_layers, use_cuda=False)
 
     #predict class
     phat = F.softmax(model(torch.unsqueeze(X, 0).to(device)),1)
@@ -90,6 +89,7 @@ def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
     grayscale_cam = grayscale_cam[0, :]
     visualization = show_cam_on_image(pic, grayscale_cam, use_rgb=True)
 
+    """
     title_={'pred_class': y_pred_, 'probability_dirty': phat}
     f = plt.figure()
     plt.axis('off')
@@ -102,15 +102,16 @@ def test_classifier_maps(image_name="4f34415f6b.jpg",model_path='baseline.pth'):
     plt.imshow(np.asarray(visualization))
     cbar = plt.colorbar(orientation='horizontal')
     plt.show(block=True)
-    
-        
-    return {'pred_class': y_pred_, 'probability_dirty': phat, 'activation map':np.asarray(visualization)}
-    
+    """
 
-predictions=test_classifier_maps()
+    activations = json.dumps(np.asarray(visualization).tolist())
+
+    # https://stackoverflow.com/questions/71595635/render-numpy-array-in-fastapi
+    # TODO: Alternative ways of passing image (e.g. base64)
+    # TODO: Save activations in an image (image filename = random hash)
+    # Api returns image filename
+
+    return {'pred_class': y_pred_, 'probability_dirty': float(phat) , 'activation map': activations}
 
 
-
-
-
-
+# predictions=test_classifier_maps()

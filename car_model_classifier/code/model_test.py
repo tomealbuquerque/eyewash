@@ -1,23 +1,12 @@
 # Imports
 import os
-import argparse
 import _pickle as pickle
 import numpy as np
-from tqdm import tqdm
-import datetime
-from torchinfo import summary
-
-# Sklearn Imports
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
-from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
+from PIL import Image
 
 # PyTorch Imports
 import torch
-from torch.utils.data import DataLoader
 import torchvision
-from torch.utils.tensorboard import SummaryWriter
-
 
 # Fix Random Seeds
 random_seed = 42
@@ -26,24 +15,23 @@ np.random.seed(random_seed)
 
 
 # Project Imports
-from model_utilities import VGG16, DenseNet121, ResNet50
-from data_utilities import StanfordCarsDataset
+from .model_utilities import VGG16, DenseNet121, ResNet50
 
 
 
 # Function: Predict Model
-def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoint=None, device='cpu'):
+def predict_car_model(image, img_nr_channels=3, img_height=224, img_width=224, backbone="ResNet50", nr_classes=196, model_checkpoint=True, device='cpu'):
 
     # VGG-16
-    if MODEL.lower() == "VGG16".lower():
+    if backbone.lower() == "VGG16".lower():
         model = VGG16(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
 
     # DenseNet-121
-    elif MODEL.lower() == "DenseNet121".lower():
+    elif backbone.lower() == "DenseNet121".lower():
         model = DenseNet121(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
 
     # ResNet50
-    elif MODEL.lower() == "ResNet50".lower():
+    elif backbone.lower() == "ResNet50".lower():
         model = ResNet50(channels=img_nr_channels, height=img_height, width=img_width, nr_classes=nr_classes)
     
     # Move model to device
@@ -51,7 +39,7 @@ def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoi
 
     # Load model weights
     if model_checkpoint:    
-        model_file = os.path.join(weights_dir, f"{model_name}_{dataset.lower()}_best.pt")
+        model_file = os.path.join("car_model_classifier", "results", f"{backbone.lower()}_stanfordcars_best.pt")
         checkpoint = torch.load(model_file, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'], strict=True)
 
@@ -73,22 +61,32 @@ def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoi
 
     with torch.no_grad():
         # Load data
-        pil_image = Image.open(image).convert("RGB")
-        pil_image = transforms(pil_image)
+        # pil_image = Image.open(image).convert("RGB")
+
+        if isinstance(image, np.ndarray):
+            image = Image.fromarray(image).convert("RGB")
+
+        pil_image = transforms(image)[None, :]
         pil_image.to(device)
 
         # Get logits
         logits = model(pil_image)
 
         # Apply Softmax to Logits
-        s_logits = torch.nn.Softmax(dim=1)(logits)                        
+        s_logits = torch.nn.Softmax(dim=1)(logits)
+
+        print(s_logits.shape)
+
+        prob = s_logits[0][torch.argmax(s_logits, dim=1)]
+
         s_logits = torch.argmax(s_logits, dim=1)
         
         # Get prediction
         prediction = s_logits[0].item()
+        
 
         # Map prediction into class name
-        with open('idx_to_class_name.pickle', 'rb') as f:
+        with open(os.path.join("car_model_classifier", "code", "idx_to_class_name.pickle"), 'rb') as f:
             idx_to_class_name = pickle.load(f)
         
         
@@ -96,4 +94,4 @@ def predict_car_model(image, backbone="ResNet50", nr_classes=196, model_checkpoi
         predicted_class = idx_to_class_name[int(prediction)]
 
 
-    return predicted_class
+    return {'predicted_class': predicted_class, 'probability': prob[0].item()}
