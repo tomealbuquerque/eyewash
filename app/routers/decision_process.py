@@ -22,10 +22,6 @@ sys.path.append('car_model_classifier')
 sys.path.append('clean_dirty_cars_classifier')
 sys.path.append('detect_cars')
 
-@router.get('/')
-def root():
-    return {'message': 'Galp_Hackaton_2022'}
-
 @router.post('/', status_code = status.HTTP_201_CREATED)
 async def decision_process(file: UploadFile = File(...)):
     # integration
