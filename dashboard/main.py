@@ -3,6 +3,9 @@ from PIL import Image
 import requests
 from requests.exceptions import HTTPError
 from matplotlib import pyplot as plt
+import json
+import cv2
+import random
 
 import numpy as np
 from io import BytesIO
@@ -33,7 +36,9 @@ def make_request(endpoint: str, img_path: str):
 
     response = requests.post(f"http://api:8002/{endpoint}/", files=files)
 
-    st.write(response.json())
+    #st.write(response.json())
+
+    
 
     return response
 
@@ -85,6 +90,8 @@ elif mechanism == "Dirtyness Detection":
 
         res = make_request('dirtyness_level_detection', 'uploaded.png')
 
+        st.write(res.json())
+
         activation_map = read_imagefile(os.path.join('..', res.json()['activation_map_path']))
 
         # TODO: Blend images like Tomé did
@@ -107,6 +114,10 @@ elif mechanism == 'Car Make and Model':
         
         res = make_request('brand_model_detection', 'uploaded_ymm.png')
 
+        st.write(res.json())
+
+    
+
 
 elif mechanism == "Car Detection":
     image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
@@ -119,6 +130,17 @@ elif mechanism == "Car Detection":
         st.image(image)
         
         res = make_request('car_detection', 'uploaded_car_detection.png')
+        
+
+        loaded_response = json.loads(res.text)
+        st.write("In the uploaded image were found: %s cars" % len(loaded_response))
+        bounded_image= image
+        for bbox in loaded_response:
+            xmin,ymin,xmax,ymax=bbox
+            st.write("Car found on:  \n XMin: %s  \n Xmax: %s  \n YMin: %s  \n  YMax: %s" % (xmin,xmax,ymin,ymax))
+            color = tuple(np.random.random(size=3) * 256)
+            cv2.rectangle(bounded_image , (xmin, ymin), (xmax, ymax), color, 2)
+        st.image(bounded_image)
 
 
 elif mechanism == 'Decision Process':
@@ -132,3 +154,14 @@ elif mechanism == 'Decision Process':
         st.image(image)
         
         res = make_request('decision_process', 'uploaded_decision_process.png')
+
+        content = res.json()
+        for c in content:
+            st.write("Vechicle found: Brand, Model and Year: %s" % (c['predicted_class_ymm']))
+            st.write("Probability of being such model: %s" % c['probability_ymm'])
+            st.write("Dirtiness condition: %s " % c['pred_class_dirty'])
+            st.write("Probability of being dirty: %s" % c['probability_dirty'])
+            
+            st.write("Check below the heatmap for the dirtiness found on vehicle:  \n")
+            img_file = read_imagefile(os.path.join('..',c['activation_map_path']))
+            st.image(img_file)

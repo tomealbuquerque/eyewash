@@ -6,6 +6,8 @@ from cvlib.object_detection import draw_bbox
 import numpy as np
 
 
+MIN_AREA_DETECTION = 20000
+
 def detect_objects(im: np.array):
   # Read image
   # im = cv2.imread(path_to_image)
@@ -17,15 +19,15 @@ def detect_objects(im: np.array):
 
   return bbox,label,conf
 
-
+#Filter object detected: just cars/trucs and area of bbox must be greater than MIN_AREA_DETECTIOn constant
 def filter_cars_detected(list_objects):
   boxes_car = []
   #Find label "CAR" and its bbox
   for idx, l in enumerate(list_objects[1]):
     if l == 'car' or l=='truck':
+      if calculate_area_bbox(list_objects[0][idx]) >= MIN_AREA_DETECTION:
       # print(f"Detected object: {l} with confidence level of {c}\n")
-      boxes_car.append(list_objects[0][idx])
-  
+        boxes_car.append(list_objects[0][idx])  
   return boxes_car
 
 

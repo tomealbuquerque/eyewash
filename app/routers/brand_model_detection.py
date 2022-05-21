@@ -24,5 +24,7 @@ async def prediction(file: UploadFile = File(...)):
 
     im = read_imagefile(await file.read())
     prediction_model = predict_car_model(im)
+
+    print(prediction_model)
     
     return prediction_model

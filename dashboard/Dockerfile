@@ -1,11 +1,13 @@
 FROM python:3.9
 
 RUN apt-get update; apt-get install
+RUN apt-get update && apt-get install -y libgl1
 
 COPY requirements.txt ./
 
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
+
 
 # Streamlit configs
 ENV LC_ALL=C.UTF-8
