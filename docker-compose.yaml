@@ -19,13 +19,13 @@ services:
       - ./clean_dirty_cars_classifier:/appl/clean_dirty_cars_classifier
       - ./detect_cars:/appl/detect_cars
       - ./car_model_classifier:/appl/car_model_classifier
+      - ./shared:/appl/shared
 
     expose:
       - 8002
 
     ports:
       - "8002:8002"
-
 
   # Define the mongodb service container
   mongodb:
@@ -51,3 +51,23 @@ services:
     # Map volume to a specific directory for persistence of data in mongodb
     volumes:
       - ./mongodb/database/data:/data/db
+
+  dashboard:
+    image: eyewash_dashboard:latest
+
+    # If fails, then restart
+    restart: always
+
+    #Command to run when container starts
+    working_dir: /appl/dashboard/
+    command: "streamlit run main.py --server.port 8504"
+
+    volumes:
+      - ./dashboard:/appl/dashboard
+      - ./shared:/appl/shared
+
+    expose:
+      - 8504
+
+    ports:
+      - "8504:8504"

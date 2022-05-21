@@ -1,7 +1,6 @@
 import sys
 from fastapi import APIRouter, status, HTTPException, UploadFile, File
 
-from .. import schemas
 from car_model_classifier.code.model_test import predict_car_model
 from ..utils.read_image import read_imagefile
 
@@ -24,5 +23,7 @@ async def prediction(file: UploadFile = File(...)):
 
     im = read_imagefile(await file.read())
     prediction_model = predict_car_model(im)
+
+    print(prediction_model)
     
     return prediction_model

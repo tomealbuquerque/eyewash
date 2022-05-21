@@ -7,7 +7,7 @@ Input: car image
 Output: clean vs dirty class | probability of dirty | heatmap where the model focus the decision
 """
 
-#imports
+# imports
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from pytorch_grad_cam.utils.image import show_cam_on_image
@@ -19,66 +19,78 @@ import json
 
 import numpy as np
 from PIL import Image
+import tempfile
+
 # from matplotlib.pyplot import imshow
 # import matplotlib.pyplot as plt
 
-device = torch.device('cpu')
+device = torch.device("cpu")
 
-#Function to test the model
+# Function to test the model
 def test_classifier_maps(im, model_path):
-    
+
     # im = Image.open(image_name)
-    
+
+    im = im.copy()
+
+    if isinstance(im, np.ndarray):
+        im = Image.fromarray(im).convert('RGB')
+
     newsize = (224, 224)
     im = im.resize(newsize)
-    
-    #To plot
+
+    # newsize = (224, 224, 3)
+    # im = np.resize(im, newsize)
+
+    # To plot
     pic = np.asarray(im)
-    pic = pic.astype('float32')
+    pic = pic.astype("float32")
     pic /= 255.0
 
-    #transformations and normalization 
-    test_transforms = transforms.Compose([
-        
-        transforms.ToTensor(), 
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-    ])
-    
+    # transformations and normalization
+    test_transforms = transforms.Compose(
+        [
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ]
+    )
+
     X = test_transforms(im)
-    
-    #load model
-    model = torch.load(model_path, map_location = torch.device('cpu'))
+
+    # load model
+    model = torch.load(model_path, map_location=torch.device("cpu"))
     model.eval()
-    
-    #get layers name where we want to get the activation maps
+
+    # get layers name where we want to get the activation maps
     named_layers = dict(model.named_modules())
-    
-    #uncomment to get the layer name and position
+
+    # uncomment to get the layer name and position
     # print(named_layers)
-    
+
     target_layers = [model.model[0][0][18][0]]
 
-    
-    #Apply GRADCAM
-    input_tensor = torch.unsqueeze(X, 0).to(device)  # Create an input tensor image for your model..
+    # Apply GRADCAM
+    input_tensor = torch.unsqueeze(X, 0).to(
+        device
+    )  # Create an input tensor image for your model..
 
     # Construct the CAM object once, and then re-use it on many images:
     cam = GradCAM(model=model, target_layers=target_layers, use_cuda=False)
 
-    #predict class
-    phat = F.softmax(model(torch.unsqueeze(X, 0).to(device)),1)
-    
+    # predict class
+    phat = F.softmax(model(torch.unsqueeze(X, 0).to(device)), 1)
+
     y_pred = phat.argmax(1)
-    
+
     y_pred = y_pred.cpu().numpy()
     phat = phat.detach().cpu().numpy()[0][1]
 
-    if y_pred==0:
-        y_pred_='clean'
-        target_=0
+    if y_pred == 0:
+        y_pred_ = "clean"
+        target_ = 0
     else:
-        y_pred_='dirty'
-        target_=1
+        y_pred_ = "dirty"
+        target_ = 1
 
     targets = [ClassifierOutputTarget(target_)]
 
@@ -104,14 +116,27 @@ def test_classifier_maps(im, model_path):
     plt.show(block=True)
     """
 
-    activations = json.dumps(np.asarray(visualization).tolist())
+    activations = np.asarray(visualization)
+
+    print("Activatiosns shape:", activations.shape)
 
     # https://stackoverflow.com/questions/71595635/render-numpy-array-in-fastapi
     # TODO: Alternative ways of passing image (e.g. base64)
     # TODO: Save activations in an image (image filename = random hash)
     # Api returns image filename
 
-    return {'pred_class': y_pred_, 'probability_dirty': float(phat) , 'activation map': activations}
+    import matplotlib.pyplot as plt
+
+    pil_image = np.array(Image.fromarray(activations).convert("RGB"))
+
+    filename = tempfile.NamedTemporaryFile(delete=False).name
+    plt.imsave(f"shared{filename}.png", pil_image)
+
+    return {
+        "pred_class_dirty": y_pred_,
+        "probability_dirty": np.round(float(phat), 3),
+        "activation_map_path": f"shared{filename}.png",
+    }
 
 
 # predictions=test_classifier_maps()
