@@ -1,7 +1,6 @@
 import sys
 from fastapi import APIRouter, status, HTTPException, UploadFile, File
 
-from .. import schemas
 from car_model_classifier.code.model_test import predict_car_model
 from ..utils.read_image import read_imagefile
 
