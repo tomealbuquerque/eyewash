@@ -1,14 +1,6 @@
-from fastapi import APIRouter
-
-from .. import models, database
-
-router = APIRouter(
-    prefix = '/decision_process',
-    tags = ['Decision Process']
-)
+# import modules
 
 from fastapi import APIRouter, UploadFile, HTTPException, status, File
-from fastapi.encoders import jsonable_encoder
 
 from detect_cars.detect_cars import filter_cars_detected, detect_objects
 from car_model_classifier.code.model_test import predict_car_model
@@ -19,8 +11,7 @@ import datetime
 from PIL import Image
 
 from ..utils.read_image import read_imagefile
-
-from .. import models, database
+from ..utils import database
 
 router = APIRouter(
     prefix = '/decision_process',
