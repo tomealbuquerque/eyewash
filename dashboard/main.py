@@ -63,18 +63,23 @@ if mechanism == 'Main':
     # Add project description
     # Use st.video to load a file containing the predictions for each frame (run this in a separate script)
 
+
     # Show the two images Tomé sent to discord, with the heatmaps (one of a clean car and one of a dirty car)
     # st.columns(2) with st.image 
     col1, col2 = st.columns(2)
 
     with col1:
-        im1 = st.image(LOGO)
         st.write("Clean car")
+        st.image(read_imagefile('assets/clean.png'))
 
     with col2:
-        im2 = st.image(LOGO)
         st.write("Dirty car")
-
+        st.image(read_imagefile('assets/dirty.png'))
+    
+    st.write("Video showing project features:  \n")
+    video_file = open('assets/heatmap_taxi.mp4', 'rb')
+    video_bytes = video_file.read()
+    st.video(video_bytes) 
     # Add project team pictures / description
 
 
