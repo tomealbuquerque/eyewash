@@ -1,13 +1,10 @@
+# import modules
 from pymongo import MongoClient
 
+CONNECTIONSTRING = 'mongodb://admin:admin@mongodb:27017'
 
-def get_db_connections():
+# connect the Mongo Client
+client = MongoClient(CONNECTIONSTRING)
 
-    USER_ENGAGEMENT = 'admin'
-    PASSWORD_ENGAGEMENT = 'admin'
-    MONGODB_ADMIN = 'admin'
-
-    client_write = MongoClient(f"mongodb://admin:{MONGODB_ADMIN}@mongodb:27017")
-    db = client_write.admin
-
-    return db
+# create the db
+db = client.washery_stand
