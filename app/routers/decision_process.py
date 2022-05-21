@@ -1,7 +1,4 @@
 from fastapi import APIRouter
-from fastapi.encoders import jsonable_encoder
-
-
 
 from .. import models, database
 
@@ -32,6 +29,12 @@ def root():
 
 @router.post('/', status_code = status.HTTP_201_CREATED)
 async def decision_process(file: UploadFile = File(...)):
+    # integration
+    extension = file.filename.split('.')[-1] in ('jpg', 'jpeg', 'png')
+
+    if not extension:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST,
+                            detail = 'image must be jpg, jpeg or png format')
 
     im = read_imagefile(await file.read())
 

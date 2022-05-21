@@ -7,4 +7,4 @@ CONNECTIONSTRING = 'mongodb://admin:{MONGODB_ADMIN}@mongodb:27017'
 client = MongoClient(CONNECTIONSTRING)
 
 # create the db
-db = client.washery_stand
+db = client.washery_standB
