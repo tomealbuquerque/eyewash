@@ -1,7 +1,5 @@
 from fastapi import APIRouter, UploadFile, HTTPException, status, File
 
-from .. import schemas
-
 from detect_cars.detect_cars import bounding_box_detection, detect_objects
 from ..utils.read_image import read_imagefile
 
