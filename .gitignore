@@ -2,6 +2,8 @@ clean_dirty_cars_classifier/baseline.pth
 
 **.pth
 
+shared/tmp/**
+
 app/__pycache__
 
 **.pyc
