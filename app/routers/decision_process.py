@@ -8,20 +8,28 @@ router = APIRouter(
 )
 
 from fastapi import APIRouter, UploadFile, HTTPException, status, File
+from fastapi.encoders import jsonable_encoder
 
 from detect_cars.detect_cars import filter_cars_detected, detect_objects
 from car_model_classifier.code.model_test import predict_car_model
 from clean_dirty_cars_classifier.test_grad_cam import test_classifier_maps
 
 import sys
+import datetime
 from PIL import Image
 
 from ..utils.read_image import read_imagefile
 
+from .. import models, database
+
+router = APIRouter(
+    prefix = '/decision_process',
+    tags = ['Decision Process']
+)
+
 sys.path.append('car_model_classifier')
 sys.path.append('clean_dirty_cars_classifier')
 sys.path.append('detect_cars')
-
 
 @router.get('/')
 def root():
@@ -70,6 +78,13 @@ async def decision_process(file: UploadFile = File(...)):
         outcome.update({'bbox': bc})
 
         outcomes.append(outcome)
+    
+        outcome['timestamp'] = datetime.now()
+
+        # save on the DB
+        database.db['cars'].insert_one(outcome)
+
+        outcome.pop('_id')
 
         outcome = {}
 
