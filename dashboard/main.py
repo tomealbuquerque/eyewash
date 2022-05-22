@@ -1,3 +1,5 @@
+# Imports
+import os
 import streamlit as st
 from PIL import Image
 import requests
@@ -6,12 +8,16 @@ from matplotlib import pyplot as plt
 import json
 import cv2
 import random
-
 import numpy as np
 from io import BytesIO
+
+
+
 def read_imagefile(file) -> Image.Image:
     image = Image.open(file).convert('RGB')
     return np.array(image)
+
+
 
 def load_image(image_file):
     img = Image.open(image_file)
@@ -19,7 +25,7 @@ def load_image(image_file):
 
 BASE_URL = 'http://api:8002/'
 
-import os
+
 
 def make_request(endpoint: str, img_path: str):
     
@@ -36,7 +42,7 @@ def make_request(endpoint: str, img_path: str):
 
     response = requests.post(f"http://api:8002/{endpoint}/", files=files)
 
-    #st.write(response.json())
+    # st.write(response.json())
 
     
 
@@ -52,9 +58,10 @@ with st.sidebar:
     st.markdown('**Tab**')
     mechanism = st.radio(
         label='Select one of the following tabs:',
-        options=['Main', 'Dirtyness Detection', "Car Make and Model", "Car Detection", "Decision Process"]
+        options=['Main', 'Car Detection', 'Dirtiness Level Detection', 'Car Model Detection', 'Decision Process Pipeline']
     )
     st.markdown('''---''')  # separator
+
 
 
 if mechanism == 'Main':
@@ -80,51 +87,10 @@ if mechanism == 'Main':
     video_file = open('assets/heatmap_taxi.mp4', 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes) 
-    # Add project team pictures / description
 
 
-elif mechanism == "Dirtyness Detection":
 
-    image_file = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg"])
-
-    if image_file:
-        image = read_imagefile(image_file)
-
-        plt.imsave('uploaded.png' , image)
-        st.image(image)
-
-        res = make_request('dirtyness_level_detection', 'uploaded.png')
-
-        st.write(res.json())
-
-        activation_map = read_imagefile(os.path.join('..', res.json()['activation_map_path']))
-
-        # TODO: Blend images like Tomé did
-        st.image(activation_map)
-
-        # Call API for dirtyness detection and bounding box detection.
-        # Draw image with bounding box
-        # requests.post('http://api:8080?get_bounding_box'...)
-
-
-elif mechanism == 'Car Make and Model':
-    image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
-
-    if image_file:
-
-        image = read_imagefile(image_file)
-        plt.imsave('uploaded_ymm.png' , image)
-
-        st.image(image)
-        
-        res = make_request('brand_model_detection', 'uploaded_ymm.png')
-
-        st.write(res.json())
-
-    
-
-
-elif mechanism == "Car Detection":
+elif mechanism == 'Car Detection':
     image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
 
     if image_file:
@@ -148,7 +114,49 @@ elif mechanism == "Car Detection":
         st.image(bounded_image)
 
 
-elif mechanism == 'Decision Process':
+
+elif mechanism == 'Dirtiness Level Detection':
+
+    image_file = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg"])
+
+    if image_file:
+        image = read_imagefile(image_file)
+
+        plt.imsave('uploaded.png' , image)
+        st.image(image)
+
+        res = make_request('dirtyness_level_detection', 'uploaded.png')
+
+        st.write(res.json())
+
+        activation_map = read_imagefile(os.path.join('..', res.json()['activation_map_path']))
+
+        # TODO: Blend images like Tomé did
+        st.image(activation_map)
+
+        # Call API for dirtyness detection and bounding box detection.
+        # Draw image with bounding box
+        # requests.post('http://api:8080?get_bounding_box'...)
+
+
+
+elif mechanism == 'Car Model Detection':
+    image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
+
+    if image_file:
+
+        image = read_imagefile(image_file)
+        plt.imsave('uploaded_ymm.png' , image)
+
+        st.image(image)
+        
+        res = make_request('brand_model_detection', 'uploaded_ymm.png')
+
+        st.write(res.json())
+
+    
+
+elif mechanism == 'Decision Process Pipeline':
     image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
 
     if image_file:
