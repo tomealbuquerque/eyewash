@@ -72,6 +72,7 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
   - Dirtiness Level Detection Model - The purpose of this endpoint is to evaluate whether an image is clean or dirty, based on a threshold limit. In order to achieve this, this endpoint uses a simple convolutional neural network (GradCAM). This endpoint consists in a POST request, providing on the body an image file on one of the formats jpg, jpeg, or png.
   
   ![POST Dirtiness Level Detection Model](/project_description/images/dirtiness_level_detection.png)
+  
   The endpoint returns a dictionary containing three keys, the predicted class of dirtiness, probability or dirtiness associated, and the activation map path that contains the path to an heatmap map which measures the level of dirtiness of an ingested image.
   
   ![POST Dirtiness Level Detection Model Dict](/project_description/images/dirtiness_level_detection_dict.png)
@@ -85,25 +86,25 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
   ![POST Decision Process Pipeline Dict](/project_description/images/decision_process_dict.png)
 
  - Dashboard - to facilitate the use of our AI-based models, we decided to build an interactive dashboard that allows the end-user to test and interact with our algorithms (via the Eyewash API). The dashboard has five different modes/tabs:
-  - Main - this tab contains visual examples of a clean and dirty car on different photographs, and video that shows our dirtiness algorithm working in real-time.
-  - Car Detection - this tab allows the user to interact with the “Car Detection Model” and visualize the outputs of this module.
-  - Dirtiness Level Detection - this tab allows the user to interact with the “Dirtiness Level Detection Model” and visualize the outputs of this module.
-  - Car Model Detection - this tab allows the user to interact with the “Car Model Detection Model” and visualize the outputs of this module.
-  - Decision Process Pipeline - this tab allows the user to interact with the whole decision process pipeline algorithm.
+    - Main - this tab contains visual examples of a clean and dirty car on different photographs, and video that shows our dirtiness algorithm working in real-time.
+    - Car Detection - this tab allows the user to interact with the “Car Detection Model” and visualize the outputs of this module.
+    - Dirtiness Level Detection - this tab allows the user to interact with the “Dirtiness Level Detection Model” and visualize the outputs of this module.
+    - Car Model Detection - this tab allows the user to interact with the “Car Model Detection Model” and visualize the outputs of this module.
+    - Decision Process Pipeline - this tab allows the user to interact with the whole decision process pipeline algorithm.
   
   ![Dashboard API Scheme](/project_description/images/eyewash_api_dashboard.png)
 
  - MongoDB Database - as previously mentioned, at the end of the decision process endpoint, the overall data resulting from the AI-based models is stored in a single MongoDB collection, thus establishing a Database to the process. The choice fell on this NoSQL database once the overall data is returned on dictionaries from the AI-based models, a data structure similar to a JSON file, which is the base object of this mapped based database. Another point is this database capability of being fully managed in a cloud service.
 
  - Repository - the repository has the following structure:
-  - “app” - this directory contains all the files related to the development of the APIs for our AI-based models;
-  - “car_model_classifier” - this directory contains all the files related to the “Car Model Detection” AI model, including data processing files, model training files and model inference files;
-  - “clean_dirty_cars_classifier” - this directory contains all the files related to the “Dirtiness Level Detection” AI model, including data processing files, model training files, model inference files and heatmap (GradCAM) generation files;
-  - “dashboard” - this directory contains all the development files related to the Streamlit dashboard that we developed for the final demo;
-  - “detect_cars” - this directory contains all the files related to the “Car Detection” AI model, including data (i.e., images), data processing files, model training files and model inference files;
-  - “eyewash-terraform” - this directory contains all the Terraform files necessary to build a virtual machine (VM) at the DigitalOcean [6] cloud service with the minimum requirements to deploy our demo application;
-  - “mongodb” - this directory contains a sub-directory “database” that acts has the storage path for the MongoDB Database we built for this demo application;
-  - “shared” - this directory works as a shared directory between all the Docker containers that compose our demo application, including the “tmp” sub-directory that allows us to write and read temporary files that may be created during the usage of the dashboard and the APIs.
+    - “app” - this directory contains all the files related to the development of the APIs for our AI-based models;
+    - “car_model_classifier” - this directory contains all the files related to the “Car Model Detection” AI model, including data processing files, model training files and model inference files;
+    - “clean_dirty_cars_classifier” - this directory contains all the files related to the “Dirtiness Level Detection” AI model, including data processing files, model training files, model inference files and heatmap (GradCAM) generation files;
+    - “dashboard” - this directory contains all the development files related to the Streamlit dashboard that we developed for the final demo;
+    - “detect_cars” - this directory contains all the files related to the “Car Detection” AI model, including data (i.e., images), data processing files, model training files and model inference files;
+    - “eyewash-terraform” - this directory contains all the Terraform files necessary to build a virtual machine (VM) at the DigitalOcean [6] cloud service with the minimum requirements to deploy our demo application;
+    - “mongodb” - this directory contains a sub-directory “database” that acts has the storage path for the MongoDB Database we built for this demo application;
+    - “shared” - this directory works as a shared directory between all the Docker containers that compose our demo application, including the “tmp” sub-directory that allows us to write and read temporary files that may be created during the usage of the dashboard and the APIs.
 
 
 # 5. Technologic prerequisites
@@ -166,10 +167,17 @@ In a few weeks, the team was able to build an in-house database with different i
 
 # References
 [1] [https://www.conceptcarcredit.co.uk/car-wash-recommendations/](https://www.conceptcarcredit.co.uk/car-wash-recommendations/)
+
 [2] [​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza](​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza)
+
 [3] [https://arxiv.org/abs/2004.10934](https://arxiv.org/abs/2004.10934) 
+
 [4] [https://pytorch.org/hub/pytorch_vision_mobilenet_v2/](https://pytorch.org/hub/pytorch_vision_mobilenet_v2/)
+
 [5] [https://arxiv.org/abs/1512.03385](https://arxiv.org/abs/1512.03385)
+
 [6] [https://www.digitalocean.com/](https://www.digitalocean.com/) 
+
 [7] [http://ai.stanford.edu/~jkrause/cars/car_dataset.html](http://ai.stanford.edu/~jkrause/cars/car_dataset.html)
+
 [8] [http://ai.stanford.edu/~jkrause/papers/3drr13.pdf](http://ai.stanford.edu/~jkrause/papers/3drr13.pdf)
