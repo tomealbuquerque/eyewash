@@ -1,8 +1,6 @@
 # Hackathon Retail 4.0 | EyeWash Team
 Deliverable of the EyeWash Team to the Hackathon Retail 4.0 "Challenge #1: Car Wash services proposal based on AI, weather rules and computer vision".
 
-Installation Instructions available [here](/project_description/docs/installation_instructions.md).
-
 ![Dashboard](/project_description/images/main_image.png)
 
 # 1. Delimitation about the problem
@@ -17,7 +15,11 @@ All the team members are passionate about driving their cars through the beautif
 
 # 2. Hypothesis of solution
 ## Detailed description about how the challenge can be solved in the team perspective
-To solve this problem, we need to identify an attribute that easily relates with the likelihood of a user to buy a car washing service. The most intuitive attribute is, indeed, the degree of dirtiness of cars. Assuming that we can train an AI model that is capable of extracting the degree of dirtiness from an image of a car (e.g., photograph, video-frame), the main goal would be to convert this insight into a relevant car-washing offer. For instance, Galp has four different offers, i.e., “simple”, “super”, “special” and “extra” [2]. Hence, besides detecting the degree of dirtiness of the car, it is necessary to decide whether the type of offer will be better suited for the user. To answer this question, a nice-to-have feature of the solution would be an AI model that can automatically detect the brand/model of the user’s car. The intuition here would be to use this information along with the degree of dirtiness of the car to come up with a (tentative) personalized recommendation for the user. On the other hand, besides working as a kind of recommendation system, the final solution would work as a means of gathering customer data (this process would have to be aligned with the General Data Protection Regulation of the European Union: EU-GDPR). Why gather customer data? If Galp is able to populate a database of the customers that bought a car washing service along with their car brand models and the type of car washing offer that they chose, at long term, it would be possible to devise a recommendation system that would recommend a special type of offer for the customer, based on their car brand and model.
+To solve this problem, we need to identify an attribute that easily relates with the likelihood of a user to buy a car washing service. The most intuitive attribute is, indeed, the degree of dirtiness of cars. Assuming that we can train an AI model that is capable of extracting the degree of dirtiness from an image of a car (e.g., photograph, video-frame), the main goal would be to convert this insight into a relevant car-washing offer. For instance, Galp has four different offers, i.e., “simple”, “super”, “special” and “extra” [2]. 
+
+Hence, besides detecting the degree of dirtiness of the car, it is necessary to decide whether the type of offer will be better suited for the user. To answer this question, a nice-to-have feature of the solution would be an AI model that can automatically detect the brand/model of the user’s car. The intuition here would be to use this information along with the degree of dirtiness of the car to come up with a (tentative) personalized recommendation for the user. 
+
+On the other hand, besides working as a kind of recommendation system, the final solution would work as a means of gathering customer data (this process would have to be aligned with the General Data Protection Regulation of the European Union: EU-GDPR). Why gather customer data? If Galp is able to populate a database of the customers that bought a car washing service along with their car brand models and the type of car washing offer that they chose, at long term, it would be possible to devise a recommendation system that would recommend a special type of offer for the customer, based on their car brand and model.
 
 # 3. Team members
 ## Who and how the team organize ours roles and responsibilities
@@ -158,7 +160,9 @@ After this first phase, the main idea is to use the information about the choice
 
 # 8. Metrics and results
 ## How the team evaluates the solution delivered and how the metrics can be afforded
-In a few weeks, the team was able to build an in-house database with different images of cars with variable dirtiness levels. We trained an AI-based model to automatically compute the level of dirtiness of a car that attained almost 100% accuracy (see confusion-matrix below). Moreover, we used state-of-the-art AI-based algorithms to perform car detection and car model and brand detection from high-resolution images. We built and deployed a final demo application based on a dashboard that allows the end-user to interact and test the different steps of the entire decision process pipeline we are proposing Galp to implement for a year in a test-pilot. We assured that the initial tests are completely free and that the amount of resources needed to perform the pilot-test is relatively low and cheap. Hence, we believe we are delivering a completely actionable solution that may impact the business model paradigm of Galp regarding the car-washing stations of the future.
+In a few weeks, the team was able to build an in-house database with different images of cars with variable dirtiness levels. We trained an AI-based model to automatically compute the level of dirtiness of a car that attained almost 100% accuracy (see confusion-matrix below). Moreover, we used state-of-the-art AI-based algorithms to perform car detection and car model and brand detection from high-resolution images. 
+
+We built and deployed a final demo application based on a dashboard that allows the end-user to interact and test the different steps of the entire decision process pipeline we are proposing Galp to implement for a year in a test-pilot. We assured that the initial tests are completely free and that the amount of resources needed to perform the pilot-test is relatively low and cheap. Hence, we believe we are delivering a completely actionable solution that may impact the business model paradigm of Galp regarding the car-washing stations of the future.
 
 ![Metrics Training](/project_description/images/metrics_training.png)
 
