@@ -81,6 +81,7 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
   - Dirtiness Level Detection - this tab allows the user to interact with the “Dirtiness Level Detection Model” and visualize the outputs of this module.
   - Car Model Detection - this tab allows the user to interact with the “Car Model Detection Model” and visualize the outputs of this module.
   - Decision Process Pipeline - this tab allows the user to interact with the whole decision process pipeline algorithm.
+  
   ![Dashboard API Scheme](/project_description/images/eyewash_api_dashboard.png)
 
  - MongoDB Database - as previously mentioned, at the end of the decision process endpoint, the overall data resulting from the AI-based models is stored in a single MongoDB collection, thus establishing a Database to the process. The choice fell on this NoSQL database once the overall data is returned on dictionaries from the AI-based models, a data structure similar to a JSON file, which is the base object of this mapped based database. Another point is this database capability of being fully managed in a cloud service.
@@ -149,3 +150,14 @@ In a few weeks, the team was able to build an in-house database with different i
 ![Metrics Training](/project_description/images/metrics_training.png)
 
 ![Confusion Matrix Training](/project_description/images/confusion_matrix_training.png)
+
+
+# References
+[1] [https://www.conceptcarcredit.co.uk/car-wash-recommendations/](https://www.conceptcarcredit.co.uk/car-wash-recommendations/)
+[2] [​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza](​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza)
+[3] [https://arxiv.org/abs/2004.10934](https://arxiv.org/abs/2004.10934) 
+[4] [https://pytorch.org/hub/pytorch_vision_mobilenet_v2/](https://pytorch.org/hub/pytorch_vision_mobilenet_v2/)
+[5] [https://arxiv.org/abs/1512.03385](https://arxiv.org/abs/1512.03385)
+[6] [https://www.digitalocean.com/](https://www.digitalocean.com/) 
+[7] [http://ai.stanford.edu/~jkrause/cars/car_dataset.html](http://ai.stanford.edu/~jkrause/cars/car_dataset.html)
+[8] [http://ai.stanford.edu/~jkrause/papers/3drr13.pdf](http://ai.stanford.edu/~jkrause/papers/3drr13.pdf)
