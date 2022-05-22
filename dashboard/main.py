@@ -170,11 +170,12 @@ elif mechanism == 'Decision Process Pipeline':
 
         content = res.json()
         for c in content:
-            st.write("Vechicle found: Brand, Model and Year: %s" % (c['predicted_class_ymm']))
+            st.write("Vehicle found: Brand, Model and Year: %s" % (c['predicted_class_ymm']))
             st.write("Probability of being such model: %s" % c['probability_ymm'])
             st.write("Dirtiness condition: %s " % c['pred_class_dirty'])
             st.write("Probability of being dirty: %s" % c['probability_dirty'])
-            
+            st.write("Recommended clean program: %s" % c['recommended_program'])
+
             st.write("Check below the heatmap for the dirtiness found on vehicle:  \n")
             img_file = read_imagefile(os.path.join('..',c['activation_map_path']))
             st.image(img_file)
