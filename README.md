@@ -54,11 +54,13 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
   
   - Car Detection Model - The purpose of this endpoint is to detect the car on an ingested picture, thus sending a response containing the coordinates of the detected cars in a bounding box format. In order to achieve this, this endpoint uses the YOLOv4 model that was developed. This endpoint consists in a POST request, providing on the BODY an image  file on one of the formats jpg, jpeg, or png.
   ![POST Car Detection](/project_description/images/car_detection_post.png)
+  
   The endpoint returns an array with n arrays containing the coordinates of the detected car on the image, being n the number of cars detected.
   ![POST Car Detection Array](/project_description/images/car_detection_array.png)
 
   - Car Model Detection Model - The purpose of this endpoint is to detect the brand model on an ingested picture which contains a unique car, so that a crop operation was previously performed. In order to achieve this, this endpoint uses the ResNet50 deep neural network that was developed. This endpoint consists in a POST request, providing on the BODY an image file on one of the formats jpg, jpeg, or png.
   ![POST Car Model Detection](/project_description/images/car_model_detection.png)
+  
   The endpoint returns a dictionary containing two keys, the predicted class of brand models, and the probability associated.
   ![POST Car Model Detection Dict](/project_description/images/car_model_detection_dict.png)
 
@@ -69,6 +71,7 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
 
   - Decision Process Pipeline - The purpose of this endpoint is to establish the decision process of the project. This endpoint consists in a POST request, providing on the body an image file on one of the formats jpg, jpeg, or png.
   ![POST Decision Process Pipeline](/project_description/images/decision_process.png)
+  
   The endpoint returns an array with n dictionaries, containing the overall data about each car detected on the image, being n the number of cars detected. The referred data includes the dirty class predicted and the correspondent probability, path to the activation map path, recommended washing program, brand model prediction and the correspondent probability, the bounding box, and lastly the timestamp of the process. The overall data is also posted on a MongoDB database.
   ![POST Decision Process Pipeline Dict](/project_description/images/decision_process_dict.png)
 
@@ -96,7 +99,9 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
 # 5. Technologic prerequisites
 ## What kind of technological tools are needed for the solution (what Galp needs to validate the functionality of the deliverable), all the tools used should be free of charges to enable Galp to evaluate, if some tools aren't available the project will be disqualified.
 ![Scheme of the Final Application](/project_description/images/final_app_scheme.png)
-The final solution was deployed using Docker containers, to guarantee reproducibility between different systems and to facilitate cloud deployment. We recommend having a free Weights&Bias account to track model training. The deployment instructions are available [here](/project_description/docs/deployment_instructions.md).
+The final solution was deployed using Docker containers, to guarantee reproducibility between different systems and to facilitate cloud deployment. We recommend having a free Weights&Bias account to track model training.
+
+The deployment instructions are available [here](/project_description/docs/deployment_instructions.md).
 
 Regarding the computational infrastructure, we refer the jury to the characteristics of the Virtual Machine we built at the DigitalOcean platform, using Terraform:
  - Operating System (OS): Ubuntu 18.04 (LTS) x64
@@ -117,13 +122,13 @@ This prototype assumes that Galp has an image acquisition infrastructure (e.g., 
  1. Detection of the car;
  2. Detection of the level of dirtiness;
  3. Car Washing Service Recommendation:
-  - 30% of probability of getting a random recommendation;
-  - 70% of probability of getting a recommendation based on the dirtiness level:
-   - Between 0 and 0.2 Dirtiness Score: Nothing
-   - Between 0.2 and 0.4 Dirtiness Score: Simple Program
-   - Between 0.4 and 0.6 Dirtiness: Super Program
-   - Between 0.6 and 0.8 Dirtiness: Special Program
-   - Between 0.8 and 1.0 Dirtiness: Extra Program
+    - 30% of probability of getting a random recommendation;
+    - 70% of probability of getting a recommendation based on the dirtiness level:
+        - Between 0 and 0.2 Dirtiness Score: Nothing
+        - Between 0.2 and 0.4 Dirtiness Score: Simple Program
+        - Between 0.4 and 0.6 Dirtiness: Super Program
+        - Between 0.6 and 0.8 Dirtiness: Special Program
+        - Between 0.8 and 1.0 Dirtiness: Extra Program
  4. The user accepts, not accepts or selects a different car washing service;
  5. The car brand and model is detected;
  6. The level of dirtiness, the choice of the user and the car brand and model are saved into the database.
@@ -142,4 +147,5 @@ After this first phase, the main idea is to use the information about the choice
 ## How the team evaluates the solution delivered and how the metrics can be afforded
 In a few weeks, the team was able to build an in-house database with different images of cars with variable dirtiness levels. We trained an AI-based model to automatically compute the level of dirtiness of a car that attained almost 100% accuracy (see confusion-matrix below). Moreover, we used state-of-the-art AI-based algorithms to perform car detection and car model and brand detection from high-resolution images. We built and deployed a final demo application based on a dashboard that allows the end-user to interact and test the different steps of the entire decision process pipeline we are proposing Galp to implement for a year in a test-pilot. We assured that the initial tests are completely free and that the amount of resources needed to perform the pilot-test is relatively low and cheap. Hence, we believe we are delivering a completely actionable solution that may impact the business model paradigm of Galp regarding the car-washing stations of the future.
 ![Metrics Training](/project_description/images/metrics_training.png)
+
 ![Confusion Matrix Training](/project_description/images/confusion_matrix_training.png)
