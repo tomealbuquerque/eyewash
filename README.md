@@ -44,6 +44,7 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
   - Car Detection Model - assuming that Galp will use conventional cameras to detect the cars of their customers, it is of utmost importance that we have a model that is able to detect the cars we want to address. Therefore, we ended up using a pre-trained model (YOLOv4 [3]) to detect and crop the cars from an image.
   
   - Dirtiness Level Detection Model - after the detection of the car, we have to understand if it is dirty or not, so that we can propose a service of car washing. Hence, we trained a simple convolutional neural network (CNN) named MobileNet_v2 [4] from Pytorch Library with our in-house dirtiness level detection data set (see Section 6). Our model outputs a probability that is used as the dirtiness level of the car (i.e., the higher the probability, the higher the dirtiness level of the model). To follow the training progress of the model we used Weights & Biases tool as the next figure shows. One of the most prominent ways of producing a class-specific heatmap in a Convolutional Neural Network (CNN) model is using Gradient-Weighted Class Activation Mapping (Grad-CAM). It uses the gradients of any target concept (e.g., "dirty car" or "clean car") in a classification network to build a coarse localization map highlighting the essential regions in the image for predicting the concept. Grad-CAM requires three things: an input image, a trained Convolutional Neural Network (CNN), and a particular class of interest. Any CNN model with differentiable layers can be used to calculate Grad-CAM. This way,  we also added a GradCAM module to this model to highlight the locations of the image where the model detected dirtiness with higher confidence; this result is converted into an heatmap that can be placed on top of the original input image.
+  
   ![Weights and Biases](/project_description/images/weights_biases.png)
   
   - Car Model Detection Model - besides detecting the dirtiness level of the cars, we find it insightful to have a record of the car model and brand (see Section 7 to understand why this is a nice-to-have feature). To do this, we trained a ResNet50 deep neural network [5] on the Stanford Cars Dataset (see Section 6). The output of this model is a string with the car brand and model.
@@ -53,26 +54,34 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
  - Application Programming Interface (API) - to facilitate the deployment of our AI-based models, we decided to build an API. The referred API is a RESTful based API, thus makes use of a representational state transfer (REST) architectural style and allows for interaction with RESTful web services. REST APIs work using ‘request’ and ‘responses’. When an API requests information from a web application or web server, it will receive a response. In order to deploy the AI-based models, a few endpoints were implemented:
   
   - Car Detection Model - The purpose of this endpoint is to detect the car on an ingested picture, thus sending a response containing the coordinates of the detected cars in a bounding box format. In order to achieve this, this endpoint uses the YOLOv4 model that was developed. This endpoint consists in a POST request, providing on the BODY an image  file on one of the formats jpg, jpeg, or png.
+  
   ![POST Car Detection](/project_description/images/car_detection_post.png)
   
   The endpoint returns an array with n arrays containing the coordinates of the detected car on the image, being n the number of cars detected.
+  
   ![POST Car Detection Array](/project_description/images/car_detection_array.png)
 
   - Car Model Detection Model - The purpose of this endpoint is to detect the brand model on an ingested picture which contains a unique car, so that a crop operation was previously performed. In order to achieve this, this endpoint uses the ResNet50 deep neural network that was developed. This endpoint consists in a POST request, providing on the BODY an image file on one of the formats jpg, jpeg, or png.
+  
   ![POST Car Model Detection](/project_description/images/car_model_detection.png)
   
   The endpoint returns a dictionary containing two keys, the predicted class of brand models, and the probability associated.
+  
   ![POST Car Model Detection Dict](/project_description/images/car_model_detection_dict.png)
 
   - Dirtiness Level Detection Model - The purpose of this endpoint is to evaluate whether an image is clean or dirty, based on a threshold limit. In order to achieve this, this endpoint uses a simple convolutional neural network (GradCAM). This endpoint consists in a POST request, providing on the body an image file on one of the formats jpg, jpeg, or png.
+  
   ![POST Dirtiness Level Detection Model](/project_description/images/dirtiness_level_detection.png)
   The endpoint returns a dictionary containing three keys, the predicted class of dirtiness, probability or dirtiness associated, and the activation map path that contains the path to an heatmap map which measures the level of dirtiness of an ingested image.
+  
   ![POST Dirtiness Level Detection Model Dict](/project_description/images/dirtiness_level_detection_dict.png)
 
   - Decision Process Pipeline - The purpose of this endpoint is to establish the decision process of the project. This endpoint consists in a POST request, providing on the body an image file on one of the formats jpg, jpeg, or png.
+  
   ![POST Decision Process Pipeline](/project_description/images/decision_process.png)
   
   The endpoint returns an array with n dictionaries, containing the overall data about each car detected on the image, being n the number of cars detected. The referred data includes the dirty class predicted and the correspondent probability, path to the activation map path, recommended washing program, brand model prediction and the correspondent probability, the bounding box, and lastly the timestamp of the process. The overall data is also posted on a MongoDB database.
+  
   ![POST Decision Process Pipeline Dict](/project_description/images/decision_process_dict.png)
 
  - Dashboard - to facilitate the use of our AI-based models, we decided to build an interactive dashboard that allows the end-user to test and interact with our algorithms (via the Eyewash API). The dashboard has five different modes/tabs:
@@ -99,7 +108,9 @@ We addressed this challenge using a “divide and conquer” strategy, i.e., we 
 
 # 5. Technologic prerequisites
 ## What kind of technological tools are needed for the solution (what Galp needs to validate the functionality of the deliverable), all the tools used should be free of charges to enable Galp to evaluate, if some tools aren't available the project will be disqualified.
+
 ![Scheme of the Final Application](/project_description/images/final_app_scheme.png)
+
 The final solution was deployed using Docker containers, to guarantee reproducibility between different systems and to facilitate cloud deployment. We recommend having a free Weights&Bias account to track model training.
 
 The deployment instructions are available [here](/project_description/docs/deployment_instructions.md).
@@ -147,6 +158,7 @@ After this first phase, the main idea is to use the information about the choice
 # 8. Metrics and results
 ## How the team evaluates the solution delivered and how the metrics can be afforded
 In a few weeks, the team was able to build an in-house database with different images of cars with variable dirtiness levels. We trained an AI-based model to automatically compute the level of dirtiness of a car that attained almost 100% accuracy (see confusion-matrix below). Moreover, we used state-of-the-art AI-based algorithms to perform car detection and car model and brand detection from high-resolution images. We built and deployed a final demo application based on a dashboard that allows the end-user to interact and test the different steps of the entire decision process pipeline we are proposing Galp to implement for a year in a test-pilot. We assured that the initial tests are completely free and that the amount of resources needed to perform the pilot-test is relatively low and cheap. Hence, we believe we are delivering a completely actionable solution that may impact the business model paradigm of Galp regarding the car-washing stations of the future.
+
 ![Metrics Training](/project_description/images/metrics_training.png)
 
 ![Confusion Matrix Training](/project_description/images/confusion_matrix_training.png)
