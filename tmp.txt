@@ -1,0 +1,2 @@
+token: dop_v1_86d4936e160b957cff8a09889c5e2381f5bbca8a56e0467f0828837f42a6848e
+ssh_key_path = ~/.ssh/do_key
