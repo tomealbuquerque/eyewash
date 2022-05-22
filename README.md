@@ -168,7 +168,7 @@ In a few weeks, the team was able to build an in-house database with different i
 # References
 [1] [https://www.conceptcarcredit.co.uk/car-wash-recommendations/](https://www.conceptcarcredit.co.uk/car-wash-recommendations/)
 
-[2] [​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza](​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza)
+[2] [​​https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza](https://galp.com/pt/pt/particulares/estrada/lavagem-e-limpeza)
 
 [3] [https://arxiv.org/abs/2004.10934](https://arxiv.org/abs/2004.10934) 
 
